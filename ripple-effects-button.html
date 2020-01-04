@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+			display: flex;
+			height: 100vh;
+			width: 100vw;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+		}
+
+		button {
+			margin: 25px;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none;
+			cursor: pointer;
+			padding: 8px 15px;
+			text-transform: uppercase;
+			border-radius: 3px;
+			outline: none;
+			position: relative;
+			overflow: hidden;
+			box-sizing: border-box;
+			height: 35px;
+			width: 85px;
+		}
+
+		#btn-1 {
+			border: 0;
+			background: #ddd;
+			color: #222;
+		}
+
+		#btn-2 {
+			background: #222;
+			color: #ddd;
+		}
+
+		@keyframes ripple {
+			100% {
+				transform: translate(-50%, -50%) scale(100);
+				opacity: 0;
+			}
+		}
+
+	</style>
+</head>
+<body>
+	<button type="button" id="btn-1" class="ripple">button</button>
+	<button type="button" id="btn-2" class="ripple" data-ripple-color="#888">button</button>
+	<div class="ripple" style="width: 300px; height: 100px; background: #ddd;"></div>
+	<div class="ripple" style="width: 100px; height: 300px; background: #ddd;"></div>
+	<!-- /.ripple -->
+
+	<script>
+		(function () {
+		    document.querySelectorAll('.ripple').forEach(setRippleElement);
+		})()
+
+		function setRippleElement(el) {
+		    const dot = document.createElement('SPAN');
+		    const largestSide = Math.sqrt(
+		      Math.pow(el.offsetWidth, 2) +
+		      Math.pow(el.offsetHeight, 2)
+		    );
+		    const dotSize = Math.ceil((largestSide * 2) / 100);
+		    const rippleColor = el.dataset.rippleColor || '#768b8c';
+
+		    dot.style = `
+		        position: absolute;
+		        left: 0;
+		        top: 0;
+		        width: ${dotSize}px;
+		        height: ${dotSize}px;
+		        z-index: 3;
+		        border-radius: 50%;
+		        background: ${rippleColor};
+		        transform: translate(-50%, -50%) scale(1);
+		        opacity: 0.5;
+		        animation: ripple 1s ease-out forwards;
+		    `;
+
+		    el.style.position = 'relative';
+		    el.style.overflow = 'hidden';
+
+		    el.addEventListener('click', ({pageX, pageY, currentTarget}) => {
+		      // x and y in percentages
+		      const x = ((pageX - currentTarget.offsetLeft) * 100)  / currentTarget.offsetWidth;
+		      const y = ((pageY - currentTarget.offsetTop) * 100)  / currentTarget.offsetHeight;
+
+		      el.appendChild(dot);
+
+		      dot.style.left = x + '%';
+		      dot.style.top = y + '%';
+		    })
+
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
