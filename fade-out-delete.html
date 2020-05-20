@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Before Semicolon</title>
+	<link rel="stylesheet" href="./setup.css">
+	<style>
+		body {
+			background-color: #1eb1d2;
+		}
+		@keyframes fadeIn {
+			100%{
+				opacity: 1;
+			}
+		}
+		.selector {
+			width: 300px;
+			min-height: 50px;
+		}
+		.selector .selected-items {
+			border-radius: 8px;
+			background-color: #fff;
+			box-shadow: 0 0 12px #41aed885;
+			padding: 10px 35px 10px 10px;
+			min-height: 50px;
+			position: relative;
+		}
+		.selector .selected-items button {
+			position: absolute;
+			width: 0;
+			height: 0;
+			padding: 0;
+			top: 40%;
+			right: 15px;
+			border-top: 5px solid #222;
+			border-right: 5px solid #222;
+			border-bottom: 5px solid transparent;
+			border-left: 5px solid transparent;
+			transform: rotate(135deg) translateY(50%);
+			cursor: pointer;
+		}
+		.selector .selected-items button.active {
+			top: 50%;
+			border-top: 5px solid transparent;
+			border-right: 5px solid transparent;
+			border-bottom: 5px solid #222;
+			border-left: 5px solid #222;
+		}
+		.selector .selected-items span {
+			height: 30px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 10px;
+			color: #045c60;
+		}
+		.selector .selected-items span.label {
+			display: flex;
+			justify-content: flex-start;
+			padding: 0;
+		}
+		.selector .selected-items span.selected {
+			border: 2px solid #41aed8;
+			padding: 10px;
+			border-radius: 5px;
+			margin-right: 8px;
+			margin-bottom: 5px;
+			cursor: pointer;
+			opacity: 0;
+			animation: fadeIn 0.3s ease forwards;
+		}
+
+		.selector ul {
+			margin: 10px 0 0 0;
+			padding: 0;
+			width: 300px;
+			list-style: none;
+			box-shadow: 0 0 12px #41aed885;
+			border-radius: 8px;
+			overflow: hidden;
+			height: 0;
+			transition: height 0.3s ease;
+		}
+
+		.selector ul.visible {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.selector ul li {
+			height: 50px;
+			background-color: #fff;
+			display: flex;
+			align-items: center;
+			padding: 0 15px;
+			cursor: pointer;
+			color: #222;
+			width: 100%;
+			transition: width 0.15s linear, height 0.3s linear, opacity 0.3s linear, border-radius 0.3s linear;
+		}
+		.selector ul li.fade-out,
+		.selector ul li:active {
+			background-color: #126eb7;
+			color: #fff;
+		}
+		.selector ul li.fade-out {
+			width: 0;
+			height: 0;
+			opacity: 0;
+			border-radius: 20%;
+			color: transparent;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="selector">
+			<div class="selected-items">
+				<span class="label">Select Skills...</span>
+				<button></button>
+			</div>
+			<ul class="items">
+				<li>HTML5</li>
+				<li>CSS3</li>
+				<li>Javascript</li>
+				<li>NodeJs</li>
+				<li>WordPress</li>
+				<li>Mongo</li>
+			</ul>
+		</div>
+		<!-- /.dropdown -->
+	</div>
+
+	<script>
+		const selectorItems = document.querySelector('.selected-items');
+		const selectorLabel = document.querySelector('.selected-items .label');
+		const toggleBtn = document.querySelector('.selected-items button');
+		const listItems = document.querySelector('.items');
+		const items = document.querySelectorAll('.items li');
+
+		const adaptListHeight = () => {
+			listItems.style.height = (listItems.querySelectorAll('*:not(.fade-out)').length * 50) + 'px';
+		}
+
+		const toggleHideToggleBtn = () => {
+			if (!listItems.querySelector('*:not(.fade-out)')) {
+				toggleBtn.style.display = 'none';
+			} else {
+				toggleBtn.style.display = 'block';
+			}
+		}
+
+		const toggleLabelText = () => {
+			if (selectorItems.querySelector('.selected')) {
+				selectorLabel.textContent = 'Selected Skills:'
+			} else {
+				selectorLabel.textContent = 'Select Skills...'
+			}
+		}
+
+		items.forEach((item, i) => {
+			item.addEventListener('click', () => {
+				item.classList.add('fade-out');
+				const selectedItem = document.createElement('span');
+				selectedItem.className = 'selected';
+				selectedItem.textContent = item.textContent;
+				selectedItem.addEventListener('click', () => {
+					item.classList.remove('fade-out');
+					selectedItem.remove();
+					toggleHideToggleBtn();
+					toggleLabelText();
+					adaptListHeight();
+				});
+				selectorItems.insertAdjacentElement('beforeend', selectedItem);
+				toggleHideToggleBtn();
+				toggleLabelText();
+				adaptListHeight();
+			})
+		})
+
+		toggleBtn.addEventListener('click', () => {
+			if (listItems.classList.contains('visible')) {
+				listItems.style.height = 0 + 'px';
+			} else {
+				adaptListHeight();
+			}
+
+			listItems.classList.toggle('visible');
+			toggleBtn.classList.toggle('active');
+		})
+	</script>
+</body>
+</html>

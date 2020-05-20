@@ -1,0 +1,25 @@
+body {
+	padding: 0;
+	margin: 0;
+	display: flex;
+	height: 100vh;
+	width: 100vw;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	font-size: 16px;
+	font-family: sans-serif;
+}
+
+button {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	outline: none;
+}
+
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+}

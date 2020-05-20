@@ -2,19 +2,9 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Title</title>
+	<title>Before Semicolon</title>
+	<link rel="stylesheet" href="./setup.css">
 	<style>
-		body {
-			padding: 0;
-			margin: 0;
-			display: flex;
-			height: 100vh;
-			width: 100vw;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-		}
-
 		button {
 			margin: 25px;
 			-webkit-appearance: none;
@@ -53,11 +43,12 @@
 	</style>
 </head>
 <body>
-	<button type="button" id="btn-1" class="ripple">button</button>
-	<button type="button" id="btn-2" class="ripple" data-ripple-color="#888">button</button>
-	<div class="ripple" style="width: 300px; height: 100px; background: #ddd;"></div>
-	<div class="ripple" style="width: 100px; height: 300px; background: #ddd;"></div>
-	<!-- /.ripple -->
+	<div class="wrapper">
+		<button type="button" id="btn-1" class="ripple">button</button>
+		<button type="button" id="btn-2" class="ripple" data-ripple-color="#888">button</button>
+		<div class="ripple" style="width: 300px; height: 100px; background: #ddd;"></div>
+		<div class="ripple" style="width: 100px; height: 300px; background: #ddd;"></div>
+	</div>
 
 	<script>
 		(function () {
