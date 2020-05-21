@@ -16,10 +16,43 @@ button {
 	-moz-appearance: none;
 	appearance: none;
 	outline: none;
+	border: none;
 }
 
 *,
 *::after,
 *::before {
 	box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;
+}
+
+span {
+	display: inline-block;
+}
+
+.phone-frame {
+	width: 345px;
+	height: 680px;
+	border: 5px solid #222;
+	border-radius: 25px;
+	background-color: #fafafa;
+	position: relative;
+	overflow: auto;
+	padding: 0 25px;
+}
+
+.phone-frame::before {
+	content: "";
+	height: 10px;
+	width: 100px;
+	position: absolute;
+	left: calc(50% - 50px);
+	top: 0;
+	background-color: #222;
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	z-index: 10000;
 }
