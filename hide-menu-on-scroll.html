@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Before Semicolon</title>
+	<link rel="stylesheet" href="./setup.css">
+	<style>
+		body{
+			background-color: #1e272c;
+		}
+		.wrapper {
+			width: 100vw;
+			max-width: 425px;
+			height: 100vh;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.scrolling-content {
+			overflow: auto;
+			height: 100%;
+			padding: 15px 15px 100px;
+		}
+
+		.post {
+			height: 80px;
+			margin-bottom: 20px;
+		}
+		.post:last-of-type {
+			margin-bottom: 0;
+		}
+
+		.menu {
+			background-color: #577483;
+			border: 2px solid #2e3c43;
+			border-radius: 8px;
+			padding: 10px;
+			position: absolute;
+			left: 15px;
+			bottom: 15px;
+			width: calc(100% - 30px);
+		}
+
+		ul {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		ul li {
+			width: 75px;
+			height: 45px;
+			background-color: #2e3c43;
+			border-radius: 5px;
+		}
+
+		.post {
+			background-color: #2e3c43;
+			border-radius: 5px;
+			position: relative;
+			padding: 10px;
+			display: flex;
+		}
+
+		.post span {
+			background-color: #1e272c;
+			border-radius: 5px;
+		}
+		.post span:nth-of-type(1){
+			width: 65px;
+			height: 100%;
+			margin-right: 10px;
+		}
+		.post span:nth-of-type(2){
+			margin-top: 5px;
+			height: 20px;
+			flex: 1;
+		}
+		.post span:nth-of-type(3){
+			height: 10px;
+			width: 60%;
+			position: absolute;
+			left: 85px;
+			top: 45px;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="wrapper">
+		<div class="scrolling-content">
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+			<div class="post"><span></span><span></span><span></span></div>
+		</div>
+		<div class="menu">
+			<ul>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+	</div>
+
+	<script>
+		const scrollingContainer = document.querySelector('.scrolling-content');
+		const menu = document.querySelector('.menu');
+
+		// const handleScroll = () => {};
+
+		// const handleScroll = () => {
+		// 	let lastScrollTop = 0;
+		// 	menu.style.transition = 'transform 0.5s ease';
+		// 	const {bottom} = getComputedStyle(menu);
+		// 	// let timer = null;
+		//
+		// 	return (e) => {
+		// 		// clearTimeout(timer);
+		// 		// timer = setTimeout(() => {
+		// 		// 	menu.style.transform = 'translateY(0)';
+		// 		// }, 350);
+		// 		if (e.target.scrollTop > lastScrollTop) {
+		// 			menu.style.transform = `translateY(calc(100% + ${bottom}))`
+		// 		} else {
+		// 			menu.style.transform = 'translateY(0)'
+		// 		}
+		//
+		// 		lastScrollTop = e.target.scrollTop;
+		// 	}
+		// };
+
+		const handleScroll = () => {
+			let lastDirection = 'down';
+			let lastScrollTop = 0;
+			let lastScrollPositionChange = 0;
+			let translate = 0;
+			let timer = null;
+			// get the full height of the container plus its offset from the bottom
+			const {offsetHeight} = menu;
+			const {bottom} = getComputedStyle(menu);
+			const max = offsetHeight + parseInt(bottom);
+
+			return (e) => {
+				clearTimeout(timer);
+				timer = setTimeout(() => {
+					translate = 0;
+					menu.style.transition = 'transform 0.5s ease';
+					menu.style.transform = `translateY(0px)`;
+				}, 350);
+				// detect scroll position
+				let direction = e.target.scrollTop > lastScrollTop ? 'down' : 'up';
+
+				// grab position at direction change
+				if (lastDirection !== direction) {
+					lastScrollPositionChange = e.target.scrollTop;
+					lastDirection = direction;
+				}
+
+				// get the difference from the changing point and current point
+				const diff = Math.abs(e.target.scrollTop - lastScrollPositionChange);
+
+				menu.style.transition = 'transform 0s ease';
+				if (direction === 'down') {
+					translate = Math.min(max, diff);
+					menu.style.transform = `translateY(${translate}px)`
+				} else {
+					menu.style.transform = `translateY(${Math.max(0, translate - diff)}px)`
+				}
+
+				lastScrollTop = e.target.scrollTop;
+			}
+		};
+
+		scrollingContainer.addEventListener('scroll', handleScroll(), {passive: true});
+	</script>
+</body>
+</html>
