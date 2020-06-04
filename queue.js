@@ -3,7 +3,7 @@ class Queue {
   #capacity = null;
 
   constructor(capacity) {
-    this.#capacity = Number(capacity) || null;
+    this.#capacity = Math.max(Number(capacity), 0) || null;
   }
 
   get size() {
