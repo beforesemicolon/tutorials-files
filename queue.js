@@ -15,11 +15,11 @@ class Queue {
   }
 
   get isFull() {
-    return Boolean(this.#capacity) && this.size === this.#capacity;
+    return this.#capacity !== null && this.size === this.#capacity;
   }
 
   enqueue(item) {
-    if (!this.#capacity || this.size < this.#capacity) {
+    if (this.#capacity === null || this.size < this.#capacity) {
       return this.#list.push(item);
     }
 
