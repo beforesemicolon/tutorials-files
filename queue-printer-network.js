@@ -1,3 +1,45 @@
+class Queue {
+  #list = [];
+  #capacity = null;
+
+  constructor(capacity) {
+    this.#capacity = Math.max(Number(capacity), 0) || null;
+  }
+
+  get size() {
+    return this.#list.length;
+  }
+
+  get isEmpty() {
+    return this.size === 0;
+  }
+
+  get isFull() {
+    return this.#capacity !== null && this.size === this.#capacity;
+  }
+
+  enqueue(item) {
+    if (this.#capacity === null || this.size < this.#capacity) {
+      return this.#list.push(item);
+    }
+
+    return this.size;
+  }
+
+  dequeue() {
+    return this.#list.shift();
+  }
+
+  peek() {
+    return this.#list[0];
+  }
+
+  print() {
+    console.log(this.#list);
+  }
+}
+
+
 class Printer extends Queue {
   constructor() {
     super(10);
@@ -20,35 +62,9 @@ class Printer extends Queue {
   }
 }
 
-// const printer = new Printer();
-
-// Array.from({ length: 15 }, (_, i) => i + 1).forEach((n) => {
-//   printer.print(n)
-//     .then(() => console.log(n, "done"))
-//     .catch(msg => console.log(n, msg))
-// });
-
 class PrinterNetwork extends Queue {
   #printers = [new Printer(), new Printer(), new Printer()];
-
-  //     print(doc) {
-  //       return new Promise((res) => {
-  //         const freePrinter = this.#printers.find((printer) => !printer.isFull());
-
-  //         if (freePrinter) {
-  //           freePrinter.print(doc).then(() => {
-  //             res(freePrinter.id);
-  //             if (this.size) {
-  //               const nextDoc = this.dequeue();
-  //               nextDoc();
-  //             }
-  //           });
-  //         } else {
-  //           this.enqueue(() => this.print(doc).then((id) => res(id)));
-  //         }
-  //       });
-  //     }
-
+  
   print(doc) {
     return new Promise((res) => {
       const freePrinter = this.#printers.reduce((acc, p) => {
@@ -59,7 +75,7 @@ class PrinterNetwork extends Queue {
         return acc;
       }, this.#printers[0]);
 
-      if (freePrinter.isFull()) {
+      if (freePrinter.isFull) {
         this.enqueue(() => this.print(doc).then((id) => res(id)));
       } else {
         freePrinter.print(doc).then(() => {
@@ -73,11 +89,3 @@ class PrinterNetwork extends Queue {
     });
   }
 }
-
-const printers = new PrinterNetwork();
-
-Array.from({ length: 10 }, (_, i) => i + 1).forEach((n) => {
-  printers
-    .print(n)
-    .then((printerId) => console.log(n, "printed by", printerId));
-});
