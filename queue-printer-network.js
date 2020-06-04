@@ -39,24 +39,37 @@ class Queue {
   }
 }
 
-
 class Printer extends Queue {
+  #printing = false;
+
   constructor() {
     super(10);
 
     this.id = Math.floor(Math.random() * 10000);
   }
 
+  #printDocs = () => {
+    this.#printing = true;
+    setTimeout(() => {
+      const docCall = this.dequeue();
+      docCall();
+      if (this.isEmpty) {
+        this.#printing = false;
+      } else {
+        this.#printDocs();
+      }
+    }, Math.floor(Math.random() * 2000));
+  };
+
   print(doc) {
     return new Promise((res, rej) => {
       if (this.isFull) {
         rej("Printer is full");
       } else {
-        this.enqueue(doc);
-        setTimeout(() => {
-          this.dequeue();
-          res();
-        }, 2000);
+        this.enqueue(() => res(doc));
+        if (!this.#printing) {
+          this.#printDocs();
+        }
       }
     });
   }
@@ -64,7 +77,7 @@ class Printer extends Queue {
 
 class PrinterNetwork extends Queue {
   #printers = [new Printer(), new Printer(), new Printer()];
-  
+
   print(doc) {
     return new Promise((res) => {
       const freePrinter = this.#printers.reduce((acc, p) => {
