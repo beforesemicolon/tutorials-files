@@ -1,8 +1,8 @@
 class CircularQueue {
   #list;
   #capacity;
-  #tail = 0;
-  #head = 0;
+  #tail = -1;
+  #head = -1;
   #size = 0;
 
   constructor(capacity) {
@@ -24,9 +24,13 @@ class CircularQueue {
 
   enqueue(item) {
     if (!this.isFull) {
-      this.#list[this.#tail] = item;
       this.#tail = (this.#tail + 1) % this.#capacity;
+      this.#list[this.#tail] = item;
       this.#size += 1;
+
+      if (this.#head === -1) {
+        this.#head = this.#tail;
+      }
     }
 
     return this.size;
@@ -39,8 +43,12 @@ class CircularQueue {
       this.#list[this.#head] = null;
       this.#head = (this.#head + 1) % this.#capacity;
       this.#size -= 1;
-    }
 
+      if (!this.size) {
+        this.#head = -1;
+        this.#tail = -1;
+      }
+    }
     return item;
   }
 
