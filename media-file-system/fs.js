@@ -1,187 +1,187 @@
-class Item {
-  #name = '';
-  #parent = null;
-
-  constructor(name) {
-    if(this.constructor.name === 'Item') {
-      throw new Error('Item class is Abstract. It can only be extended')
-    }
-    
-    this.name = name;
-  }
-
-  get path() {
-    if(this.parent){
-      return `${this.parent.path}/${this.name}`
-    }
-    
-    return this.name;
-  }
-
-  get name() {
-    return this.#name;
-  }
-
-  set name(newName) {
-    if(!newName || typeof newName !== 'string' || !newName.trim().length) {
-      throw new Error('Item name must be a non empty string');
-    }
-    
-    if(newName.includes('/')) {
-      throw new Error("Item name contains invalid symbol");
-    }
-    
-    if(this.parent && this.parent.hasItem(newName)) {
-      throw new Error(`Item with name of "${newName}" already exists in this directory`);
-    }
-    
-    this.#name = newName.trim();
-  }
-
-  get parent() {
-    return this.#parent;
-  }
-
-  set parent(newParent) {
-    if(newParent !== this.#parent) {
-       const prevParent = this.#parent;
-       this.#parent = newParent;
-       
-       if(prevParent) {
-          prevParent.removeItem(this.name)
-       }
-    
-       if(newParent) {
-          newParent.insertItem(this)
-       }
-    }
-  }
+export class Item {
+	#name = '';
+	#parent = null;
+	
+	constructor(name) {
+		if(this.constructor.name === 'Item') {
+			throw new Error('Item class is Abstract. It can only be extended')
+		}
+		
+		this.name = name;
+	}
+	
+	get path() {
+		if(this.parent){
+			return `${this.parent.path}/${this.name}`
+		}
+		
+		return this.name;
+	}
+	
+	get name() {
+		return this.#name;
+	}
+	
+	set name(newName) {
+		if(!newName || typeof newName !== 'string' || !newName.trim().length) {
+			throw new Error('Item name must be a non empty string');
+		}
+		
+		if(newName.includes('/')) {
+			throw new Error("Item name contains invalid symbol");
+		}
+		
+		if(this.parent && this.parent.hasItem(newName)) {
+			throw new Error(`Item with name of "${newName}" already exists in this directory`);
+		}
+		
+		this.#name = newName.trim();
+	}
+	
+	get parent() {
+		return this.#parent;
+	}
+	
+	set parent(newParent) {
+		if(newParent !== this.#parent) {
+			const prevParent = this.#parent;
+			this.#parent = newParent;
+			
+			if(prevParent) {
+				prevParent.removeItem(this.name)
+			}
+			
+			if(newParent) {
+				newParent.insertItem(this)
+			}
+		}
+	}
 }
 
-class File extends Item {
-  #type = 'text';
-  #mimeType = 'txt';
-  #textContent = '';
-  #source = null;
-
-  constructor(name = '', textContent = '', source = null) {
-    super(name || 'un-named file');
-    this.textContent = textContent;
-    this.source = source;
-  }
-
-  get textContent() {
-    return this.#textContent;
-  }
-
-  set textContent(content) {
-    this.#textContent = `${content || ''}`;
-  }
-
-  get source() {
-    return this.#source;
-  }
-
-  set source(newSource) {
-    this.#source = newSource;
-    
-    if(newSource && newSource.type) {
-      let [type, mime] = newSource.type.split('/');
-      mime = mime.match(/[\w-]+/g);
-      
-      this.#type = type || 'text';
-      this.#mimeType = !mime || mime[0] === 'plain' ? 'txt' : mime[0];
-    }
-  }
-
-  get type() {
-    return this.#type;
-  }
-
-  get mimeType() {
-    return this.#mimeType;
-  }
-
-  get copy() {
-    return new File(`${this.name} copy`, this.textContent, this.source);
-  }
+export class File extends Item {
+	#type = 'text';
+	#mimeType = 'txt';
+	#textContent = '';
+	#source = null;
+	
+	constructor(name = '', textContent = '', source = null) {
+		super(name || 'un-named file');
+		this.textContent = textContent;
+		this.source = source;
+	}
+	
+	get textContent() {
+		return this.#textContent;
+	}
+	
+	set textContent(content) {
+		this.#textContent = `${content || ''}`;
+	}
+	
+	get source() {
+		return this.#source;
+	}
+	
+	set source(newSource) {
+		this.#source = newSource;
+		
+		if(newSource && newSource.type) {
+			let [type, mime] = newSource.type.split('/');
+			mime = mime.match(/[\w-]+/g);
+			
+			this.#type = type = 'text';
+			this.#mimeType = !mime || mime[0] === 'plain' ? 'txt' : mime[0];
+		}
+	}
+	
+	get type() {
+		return this.#type;
+	}
+	
+	get mimeType() {
+		return this.#mimeType;
+	}
+	
+	get copy() {
+		return new File(`${this.name} copy`, this.textContent, this.source);
+	}
 }
 
-const DIRECTORY_TYPE = {
-  DEFAULT: 'DEFAULT'
+export const DIRECTORY_TYPE = {
+	DEFAULT: 'DEFAULT'
 }
 
-class Directory extends Item {
-  #type: DIRECTORY_TYPE.DEFAULT;
-  #children = new Map();
-
-  constructor(name = '', type = DIRECTORY_TYPE.DEFAULT) {
-    super(name || 'un-named directory')
-    this.#type = DIRECTORY_TYPE[type] ? type : DIRECTORY_TYPE.DEFAULT;
-  }
-
-  get content() {
-    return Array.from(this.#children.values());
-  }
-
-  get type() {
-    return this.#type;
-  }
-
-  get copy() {
-    const dirCopy = new Directory(`${this.name} copy`, this.type);
-    
-    this.content.forEach(item => {
-      const itemCopy = item.copy;
-      itemCopy.name = item.name;
-      dirCopy.insertItem(itemCopy);
-    })
-    
-    return dirCopy;
-  }
-
-  hasItem(itemName) {
-    return this.#children.has(itemName);
-  }
-
-  insertItem(item) {
-    if(this.hasItem(item.name)) return true;
-    
-    if(item === this) throw new Error('Directory cannot contain itself');
-    
-    let parent = this.parent;
-    
-    while(parent !== null) {
-      if(parent === item) {
-        throw new Error('Directory cannot contain one of its ancestors');
-      }
-      parent = parent.parent;
-    }
-    
-    this.#children.set(item.name, item);
-    item.parent = this;
-    
-    return this.hasItem(item.name);
-  }
-
-  getItem(itemName) {
-    return this.#children.get(itemName) || null;
-  }
-
-  removeItem(itemName) {
-    const item = this.getItem(itemName);
-    
-    if(item) {
-      this.#children.delete(itemName);
-      item.parent = null;
-    }
-    
-    return !this.hasItem(itemName);
-  }
+export class Directory extends Item {
+	#type = DIRECTORY_TYPE.DEFAULT;
+	#children = new Map();
+	
+	constructor(name = '', type = DIRECTORY_TYPE.DEFAULT) {
+		super(name || 'un-named directory')
+		this.#type = DIRECTORY_TYPE[type] ? type : DIRECTORY_TYPE.DEFAULT;
+	}
+	
+	get content() {
+		return Array.from(this.#children.values());
+	}
+	
+	get type() {
+		return this.#type;
+	}
+	
+	get copy() {
+		const dirCopy = new Directory(`${this.name} copy`, this.type);
+		
+		this.content.forEach(item => {
+			const itemCopy = item.copy;
+			itemCopy.name = item.name;
+			dirCopy.insertItem(itemCopy);
+		})
+		
+		return dirCopy;
+	}
+	
+	hasItem(itemName) {
+		return this.#children.has(itemName);
+	}
+	
+	insertItem(item) {
+		if(this.hasItem(item.name)) return false;
+		
+		if(item === this) throw new Error('Directory cannot contain itself');
+		
+		let parent = this.parent;
+		
+		while(parent !== null) {
+			if(parent === item) {
+				throw new Error('Directory cannot contain one of its ancestors');
+			}
+			parent = parent.parent;
+		}
+		
+		this.#children.set(item.name, item);
+		item.parent = this;
+		
+		return this.hasItem(item.name);
+	}
+	
+	getItem(itemName) {
+		return this.#children.get(itemName) || null;
+	}
+	
+	removeItem(itemName) {
+		const item = this.getItem(itemName);
+		
+		if(item) {
+			this.#children.delete(itemName);
+			item.parent = null;
+		}
+		
+		return !this.hasItem(itemName);
+	}
 }
 
-class FileSystem {
- #self = new Directory('root');
+export class FileSystem {
+	#self = new Directory('root');
 	#currentDirectory = this.#self;
 	#currentDirectoryPath = [this.#currentDirectory]; // as stack
 	// #currentUser = 'root';
@@ -434,4 +434,5 @@ class FileSystem {
 		return null;
 	}
 }
+
 
