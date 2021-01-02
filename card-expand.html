@@ -134,22 +134,37 @@
 	<script>
 		const cards = document.querySelectorAll('.card');
 
+		// this is the old and much hackier solution
+// 		const toggleExpansion = (element, to, duration = 350) => {
+// 		  return new Promise((res) => {
+// 		    requestAnimationFrame(() => {
+// 		      element.style.transition = `
+// 			width ${duration}ms ease-in-out,
+// 			height ${duration}ms ease-in-out,
+// 			left ${duration}ms ease-in-out,
+// 			top ${duration}ms ease-in-out
+// 		      `;
+// 		      requestAnimationFrame(() => {
+// 			element.style.top = to.top;
+// 			element.style.left = to.left;
+// 			element.style.width = to.width;
+// 			element.style.height = to.height;
+// 		      })
+// 		    });
+// 		    setTimeout(res, duration);
+// 		  })
+// 		}
+		
 		const toggleExpansion = (element, to, duration = 350) => {
 		  return new Promise((res) => {
-		    requestAnimationFrame(() => {
-		      element.style.transition = `
-			width ${duration}ms ease-in-out,
-			height ${duration}ms ease-in-out,
-			left ${duration}ms ease-in-out,
-			top ${duration}ms ease-in-out
-		      `;
-		      requestAnimationFrame(() => {
-			element.style.top = to.top;
-			element.style.left = to.left;
-			element.style.width = to.width;
-			element.style.height = to.height;
-		      })
-		    });
+		    element.animate([
+		      {
+			top: to.top,
+			left: to.left,
+			width: to.width,
+			height: to.height
+		      }
+		    ], {duration, fill: 'forwards', ease: 'ease-in'})
 		    setTimeout(res, duration);
 		  })
 		}
