@@ -12,6 +12,9 @@
 			background: linear-gradient(45deg, black, #ea3e3e);
 			color: #ddd;
 		}
+		*, *::after, *::before {
+		  box-sizing: border-box;
+		}
 		@keyframes slideDown {
 			100%{
 				transform: translateY(0);
@@ -132,21 +135,23 @@
 		const cards = document.querySelectorAll('.card');
 
 		const toggleExpansion = (element, to, duration = 350) => {
-			return new Promise((res) => {
-				requestAnimationFrame(() => {
-					element.style.transition = `
-						width ${duration}ms ease-in-out,
-						height ${duration}ms ease-in-out,
-						left ${duration}ms ease-in-out,
-						top ${duration}ms ease-in-out
-					`;
-					element.style.top = to.top;
-					element.style.left = to.left;
-					element.style.width = to.width;
-					element.style.height = to.height;
-				});
-				setTimeout(res, duration);
-			})
+		  return new Promise((res) => {
+		    requestAnimationFrame(() => {
+		      element.style.transition = `
+			width ${duration}ms ease-in-out,
+			height ${duration}ms ease-in-out,
+			left ${duration}ms ease-in-out,
+			top ${duration}ms ease-in-out
+		      `;
+		      requestAnimationFrame(() => {
+			element.style.top = to.top;
+			element.style.left = to.left;
+			element.style.width = to.width;
+			element.style.height = to.height;
+		      })
+		    });
+		    setTimeout(res, duration);
+		  })
 		}
 
 		const fadeContent = (element, opacity, duration = 300) => {
