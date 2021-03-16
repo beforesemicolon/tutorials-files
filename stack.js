@@ -18,22 +18,14 @@ class Stack {
     return this.#capacity ? this.size === this.#capacity : false;
   }
 
-//   push(item) {
-//     if (!this.#capacity || this.size < this.#capacity) {
-//       this.#list.push(item);
-//     }
-    
-//     return this.size;
-//   }
-  
   push(item) {
-   if (this.#capacity && this.size === this.#capacity) {
-      this.#list.shift();    
-   }
+    if (!this.#capacity || this.size < this.#capacity) {
+      this.#list.push(item);
+    }
     
-   return this.#list.push(item);
+    return this.size;
   }
-
+ 
   pop() {
     return this.pop();
   }
