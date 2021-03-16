@@ -19,7 +19,7 @@ class Stack {
   }
 
   push(item) {
-    if (!this.#capacity || this.size < this.#capacity) {
+    if (!this.isFull) {
       this.#list.push(item);
     }
     
