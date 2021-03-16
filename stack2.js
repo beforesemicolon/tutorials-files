@@ -30,7 +30,7 @@ class Stack {
     if(!this.isFull) {
       const newItem = this.#createItem(item);
     
-      if(this.#lastItem) {
+      if(!this.isEmpty) {
         newItem.prev = this.#lastItem;
       }
 
