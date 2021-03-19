@@ -3,7 +3,7 @@ class Stack {
   #capacity = null;
 
   constructor(capacity = null) {
-    this.#capacity = capacity;
+    this.#capacity = Math.max(Number(capacity), 0) || null;
   }
 
   get size() {
