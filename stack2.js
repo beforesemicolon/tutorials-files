@@ -58,6 +58,10 @@ class Stack {
   }
   
   toString() {
+    if(this.isEmpty) {
+      return '';
+    }
+    
     let current = this.#lastItem;
     let str = `${current.value}`;
     
