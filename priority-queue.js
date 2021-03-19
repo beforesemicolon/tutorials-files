@@ -40,8 +40,7 @@ class PriorityQueue {
   }
 
   dequeue() {
-    const element = this.#list.shift();
-    return element ? element.item : null;
+    return this.isEmpty ? null : this.#list.shift().item;
   }
 
   toString() {
