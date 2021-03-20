@@ -19,7 +19,7 @@ class Queue {
   }
 
   enqueue(item) {
-    if (this.isFull) {
+    if (!this.isFull) {
       return this.#list.push(item);
     }
 
