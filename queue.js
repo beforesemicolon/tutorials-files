@@ -34,7 +34,7 @@ class Queue {
     return this.#list[0];
   }
 
-  print() {
-    console.log(this.#list);
+  toString() {
+    return this.#list.toString();
   }
 }
