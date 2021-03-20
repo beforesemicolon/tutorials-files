@@ -1,6 +1,7 @@
 class Queue {
   #list = [];
   #capacity = null;
+  #tail = -1;
 
   constructor(capacity) {
     this.#capacity = Math.max(Number(capacity), 0) || null;
@@ -15,12 +16,17 @@ class Queue {
   }
 
   get isFull() {
-    return this.#capacity !== null && this.size === this.#capacity;
+    return this.#capacity !== null && this.#tail === this.#capacity;
   }
 
   enqueue(item) {
+    if(this.isEmpty) {
+      this.#tail = 0;
+    }
+    
     if (!this.isFull) {
-      return this.#list.push(item);
+      this.#list.push(item);
+      this.#tail += 1;
     }
 
     return this.size;
