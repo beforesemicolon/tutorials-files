@@ -68,7 +68,7 @@ class LinkedList {
   }
   
   remove(index = 0) {
-    if (index < 0 || index > this.size) return null;
+    if (index < 0 || index >= this.size) return null;
 
     let removedElement = this.head;
 
