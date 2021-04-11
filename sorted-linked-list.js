@@ -1,10 +1,12 @@
-class SortedLinkedList extends LinkedList {
+class SortedLinkedList extends DoubleLinkedList {
+  #sortingFunction;
+  
   constructor(sortingFunction = null) {
     super();
-    this._sortingFunction = sortingFunction;
+    this.#sortingFunction = sortingFunction;
     
-    if(!sortingFunction || typeof sortingFunction !== 'function') {
-      this._sortingFunction = (a, b) => {
+    if(typeof sortingFunction !== 'function') {
+      this.#sortingFunction = (a, b) => {
         if(a === b) return 0;
         
         return a > b ? 1 : -1;
@@ -13,25 +15,25 @@ class SortedLinkedList extends LinkedList {
     
     this.push = undefined;
   }
-    
-  insert(element) {
-    if(this.isEmpty) {
-      return super.insert(element);
+  
+  insert(item) {
+    if(this.size === 0) {
+      return super.insert(item);
     }
     
-    const index = this._getNextElementIndex(element);
+    const index = this.#getNextElementIndex(item);
     
-    return super.insert(element, index);
+    return super.insert(item, index);
   }
   
-  _getNextElementIndex(element) {
+  #getNextElementIndex(item) {
     let current = this.head;
     let i = 0;
     
     for(; i< this.size; i++) {
-      const res = this._sortingFunction(element, current.element);
+      const res = this.#sortingFunction(item, current.value);
       
-      if(res === false || res === -1) return i;
+      if(!(res >= 0) || !res) return i;
       
       current = current.next;
     }
@@ -39,18 +41,3 @@ class SortedLinkedList extends LinkedList {
     return i;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
