@@ -28,17 +28,23 @@ class DoubleLinkedList extends LinkedList {
   
   insert(item, index = 0) {
     if (index < 0 || index > this.size) return;
-    
-    if(index === this.size) {
-      return this.push(item);
-    }
 
     const element = this.createElement(item);
 
     if (index === 0) {
       element.next = this.head;
-      this.head.prev = element;
+      
+      if(this.head) {
+        this.head.prev = element;
+      } else {
+        this.tail = element;
+      }
+      
       this.head = element;
+    } else if(index === this.size) {
+      this.tail.next = element;
+      element.prev = this.tail;
+      this.tail = element;
     } else {
       let previous = this.head;
       
@@ -77,6 +83,11 @@ class DoubleLinkedList extends LinkedList {
       removedElement = previous.next;
       previous.next = removedElement.next;
       removedElement.next.prev = previous;
+    }
+    
+    if(!this.head || !this.tail) {
+      this.head = null;
+      this.tail = null;
     }
 
     this.#size -= 1;
