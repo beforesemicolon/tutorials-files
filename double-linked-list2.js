@@ -93,4 +93,19 @@ class DoubleLinkedList extends LinkedList {
     this.#size -= 1;
     return removedElement.value;
   }
+
+  reverse() {
+    let current = this.head;
+    this.head = this.tail;
+    this.tail = current;
+    
+    while(current) {
+      const prev = current.prev;
+      const next = current.next;
+      
+      current.prev = next;
+      current.next = prev;
+      current = next;
+    }
+  }
 }
