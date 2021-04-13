@@ -156,4 +156,19 @@ class LinkedList {
     
     return str;
   }
+
+  reverse() {
+    let previous = this.head;
+    let current = this.head.next;
+    previous.next = null;
+    
+    while(current) {
+      const next = current.next;
+      current.next = previous;
+      previous = current;
+      current = next;
+    }
+    
+    this.head = previous;
+  }
 }
