@@ -5,7 +5,7 @@ class Queue {
   #capacity = null;
   
   constructor(capacity = null) {
-    this.#capacity = capacity;
+    this.#capacity = Math.max(Number(capacity), 0) || null;
   }
 
   get size() {
@@ -71,7 +71,7 @@ class Queue {
     
     while(current.next) {
       current = current.next;
-      str = `${str},${current.value}`;
+      str = `${str}, ${current.value}`;
     }
     
     return str;
