@@ -6,6 +6,10 @@ class Queue {
 
   constructor(capacity) {
     this.#capacity = Math.max(Number(capacity), 0) || null;
+    
+    if(this.#capacity) {
+      this.#list = Array.from({length: this.#capacity});
+    }
   }
 
   get size() {
@@ -17,7 +21,7 @@ class Queue {
   }
 
   get isFull() {
-    return this.#capacity !== null && this.#tail === this.#capacity;
+    return this.#capacity && this.#tail === this.#capacity;
   }
 
   enqueue(item) {
@@ -34,6 +38,7 @@ class Queue {
     
     if(!this.isEmpty) {
       item = this.#list[this.#head];
+      delete this.#list[this.#head];
       
       this.#head += 1;
       
@@ -47,9 +52,34 @@ class Queue {
   }
 
   peek() {
-    return this.#list[0];
+    if(this.isEmpty) {
+      return null;
+    }
+    
+    return this.#list[this.#head];
   }
 
+  clear() {
+    if(this.#capacity) {
+      this.#list = Array.from({length: this.#capacity});
+    } else {
+      this.#list = [];
+    }
+    
+    this.#head = 0;
+    this.#tail = 0;
+  }
+  
+  print() {
+    const list = [];
+    
+    this.#list.forEach(item => {
+      list.push(item);
+    })
+    
+    console.log(list)
+  }
+  
   toString() {
     if(this.isEmpty) {
       return '';
@@ -57,7 +87,7 @@ class Queue {
     
     let str = `${this.#list[this.#head]}`;
     
-    for(let i = this.#head+1; i< this.#tail; i++) {
+    for(let i = this.#head+1; i < this.#tail; i++) {
       str += `, ${this.#list[i]}`;
     }
     
