@@ -75,6 +75,10 @@ class PriorityQueue {
   }
   
   peek() {
+    if(this.isEmpty) {
+      return null;
+    }
+    
     return this.#firstItem.value;
   }
   
