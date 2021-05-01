@@ -16,13 +16,13 @@ class SetExtended extends Set {
   }
 
   union(set) {
-    if (!this.#isValidSet(set)) return this;
+    if (!this.#isValidSet(set)) return new SetExtended();
 
     return new SetExtended([...this, ...set]);
   }
 
   difference(set) {
-    if (!this.#isValidSet(set)) return this;
+    if (!this.#isValidSet(set)) return new SetExtended();
 
     const differenceSet = new SetExtended();
 
@@ -49,7 +49,7 @@ class SetExtended extends Set {
   }
 
   intersectionDifference(set) {
-    if (!this.#isValidSet(set)) return this;
+    if (!this.#isValidSet(set)) return new SetExtended();
         
     return new SetExtended([
       ...this.difference(set),
