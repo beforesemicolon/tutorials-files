@@ -27,7 +27,7 @@ class Stack {
   }
  
   pop() {
-    return this.pop();
+    return this.#list.pop();
   }
 
   peek() {
