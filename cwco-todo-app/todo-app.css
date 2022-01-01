@@ -1,0 +1,13 @@
+.controls {
+	margin-bottom: 10px;
+	border-bottom: 1px solid #222;
+	padding: 10px;
+	background: #f3f3f3;
+	display: flex;
+	aling-items: center;
+	justify-content: space-between;
+}
+
+todo-item {
+	margin-bottom: 20px;
+}
