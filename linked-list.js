@@ -1,48 +1,31 @@
 class LinkedList {
-  size = 0;
+  #size = 0;
   head = null;
+  
+  constructor() {
+    this[Symbol.iterator] = function* () {
+      let current = this.head;
 
-  get isEmpty() {
-    return this.size === 0;
+      while(current) {
+        yield current.value;
+        current = current.next;
+      }
+    };
   }
-
-  createNode(element) {
-    return {element, next: null}
+  
+  get size() {
+    return this.#size;
   }
-
-  getNodeAt(index) {
-    if (index === undefined || index < 0 || index >= this.size) return null;
-
-    if (index === 0) return this.head;
+  
+  createElement(value) {
+    return {value, next: null}
+  }
+  
+  push(item) {
+    const element = this.createElement(item);
     
-    let current = this.head;
-    
-    for(let i = 0; i < index; i++) {
-      current = current.next;
-    }
-
-    return current;
-  }
-
-  push_(element) {
-    const node = this.createNode(element);
-
-    if (!this.head) {
-      this.head = node;
-    } else {
-      const current = this.getNodeAt(this.size - 1);
-      current.next = node;
-    }
-
-    this.size += 1;
-    return this.size;
-  }
-
-  push(element) {
-    const node = this.createNode(element);
-
-    if (this.head === null) {
-      this.head = node;
+    if(this.head === null) {
+      this.head = element;
     } else {
       let current = this.head;
 
@@ -50,40 +33,25 @@ class LinkedList {
         current = current.next;
       }
 
-      current.next = node;
+      current.next = element;
     }
-
-    this.size += 1;
+    
+    this.#size += 1;
     return this.size;
   }
-
-  insert_(element, index = 0) {
-    if (index > this.size) return false;
-
-    const node = this.createNode(element);
-    let current = this.head;
-
-    if (index === 0) {
-      node.next = current;
-      this.head = node;
-    } else {
-      current = this.getNodeAt(index - 1);
-      node.next = current.next;
-      current.next = node;
+  
+  insert(item, index = 0) {
+    if (index < 0 || index > this.size) return;
+    
+    if(index === this.size) {
+      return this.push(item);
     }
 
-    this.size += 1;
-    return true;
-  }
-
-  insert(element, index = 0) {
-    if (index < 0 || index > this.size) return false;
-
-    const node = this.createNode(element);
+    const element = this.createElement(item);
 
     if (index === 0) {
-      node.next = this.head;
-      this.head = node;
+      element.next = this.head;
+      this.head = element;
     } else {
       let previous = this.head;
       
@@ -91,79 +59,116 @@ class LinkedList {
         previous = previous.next;
       }
 
-      node.next = previous.next;
-      previous.next = node;
+      element.next = previous.next;
+      previous.next = element;
     }
 
-    this.size += 1;
-    return true;
+    this.#size += 1;
+    return this.size;
   }
-
+  
   remove(index = 0) {
-    if (index < 0 || index > this.size) return null;
+    if (index < 0 || index >= this.size) return null;
 
-    let removedNode = this.head;
+    let removedElement = this.head;
 
     if (index === 0) {
       this.head = this.head.next;
     } else {
-      let previous = this.getNodeAt(index - 1);
-      removedNode = previous.next;
-      previous.next = removedNode.next;
+      let previous = this.head;
+      
+      for(let i = 0; i < index - 1; i++) {
+        previous = previous.next;
+      }
+      
+      removedElement = previous.next;
+      previous.next = removedElement.next;
     }
 
-    this.size -= 1;
-    return removedNode.element;
+    this.#size -= 1;
+    return removedElement.value;
   }
+  
+  get(index = -1) {
+    if (index < 0 || index >= this.size -1) return null;
+    
+    let element = this.head;
 
-  get(index) {
-    const node = this.getNodeAt(index);
-    return node ? node.element : null;
+    for(let i = 0; i < index; i++) {
+      element = element.next;
+    }
+    
+    return element.value;
   }
-
-  indexOf(element) {
+  
+  forEach(cb) {
+    let current = this.head;
+    let index = 0;
+    
+    while(current) {
+      cb(current.value, index);
+      current = current.next;
+      index += 1;
+    }
+  }
+  
+  find(cb) {
+    let current = this.head;
+    let result = null;
+    
+    while(current) {
+      const matched = cb(current.value);
+      
+      if(matched) {
+        result = current;
+        break;
+      }
+      
+      current = current.next;
+    }
+    
+    return result?.value ?? null;
+  }
+  
+  indexOf(item) {
     let current = this.head;
 
-    if (current.element === element) return 0;
+    if (current.value === item) return 0;
     
     for(let i = 0; i < this.size; i++) {
-      if (current.element === element) return i;
+      if (current.value === item) return i;
       current = current.next;
     }
 
     return -1;
   }
-
-  contains(element) {
-    return this.indexOf(element) !== -1;
-  }
-
+  
   toString() {
-    if (!this.size) return "";
-
-    let str = `${this.head.element}`;
-    let current = this.head;
+    if(!this.size) return '';
     
-    for(let i=0; i < this.size - 1; i++) {
+    let str = `${this.head.value}`;
+    let current = this.head.next;
+    
+    while(current) {
+      str += `, ${current.value}`;
       current = current.next;
-      str += `,${current.element}`;
     }
     
     return str;
   }
 
-  print() {
-    let arr = [];
-
-    if (this.size) {
-      let current = this.head;
-      
-      for(let i=0; i < this.size; i++) {
-        arr.push(current);
-        current = current.next;
-      }
+  reverse() {
+    let previous = this.head;
+    let current = this.head.next;
+    previous.next = null;
+    
+    while(current) {
+      const next = current.next;
+      current.next = previous;
+      previous = current;
+      current = next;
     }
-
-    console.log(arr);
+    
+    this.head = previous;
   }
 }

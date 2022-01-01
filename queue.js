@@ -1,13 +1,19 @@
 class Queue {
   #list = [];
   #capacity = null;
+  #tail = 0;
+  #head = 0;
 
   constructor(capacity) {
     this.#capacity = Math.max(Number(capacity), 0) || null;
+    
+    if(this.#capacity) {
+      this.#list = Array.from({length: this.#capacity});
+    }
   }
 
   get size() {
-    return this.#list.length;
+    return this.#tail - this.#head;
   }
 
   get isEmpty() {
@@ -15,26 +21,76 @@ class Queue {
   }
 
   get isFull() {
-    return this.#capacity !== null && this.size === this.#capacity;
+    return this.#capacity && this.#tail === this.#capacity;
   }
 
   enqueue(item) {
-    if (this.#capacity === null || this.size < this.#capacity) {
-      return this.#list.push(item);
+    if(!this.isFull) {
+      this.#list[this.#tail] = item;
+      this.#tail += 1;
     }
 
     return this.size;
   }
 
   dequeue() {
-    return this.#list.shift();
+    let item = null;
+    
+    if(!this.isEmpty) {
+      item = this.#list[this.#head];
+      delete this.#list[this.#head];
+      
+      this.#head += 1;
+      
+      if(this.isEmpty) {
+        this.#head = 0;
+        this.#tail = 0;
+      }
+    }
+    
+    return item;
   }
 
   peek() {
-    return this.#list[0];
+    if(this.isEmpty) {
+      return null;
+    }
+    
+    return this.#list[this.#head];
   }
 
+  clear() {
+    if(this.#capacity) {
+      this.#list = Array.from({length: this.#capacity});
+    } else {
+      this.#list = [];
+    }
+    
+    this.#head = 0;
+    this.#tail = 0;
+  }
+  
   print() {
-    console.log(this.#list);
+    const list = [];
+    
+    this.#list.forEach(item => {
+      list.push(item);
+    })
+    
+    console.log(list)
+  }
+  
+  toString() {
+    if(this.isEmpty) {
+      return '';
+    }
+    
+    let str = `${this.#list[this.#head]}`;
+    
+    for(let i = this.#head+1; i < this.#tail; i++) {
+      str += `, ${this.#list[i]}`;
+    }
+    
+    return str;
   }
 }

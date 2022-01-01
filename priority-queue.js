@@ -3,7 +3,7 @@ class PriorityQueue {
   #capacity;
 
   constructor(capacity) {
-    this.#capacity = Number(capacity) || null;
+    this.#capacity = Math.max(Number(capacity), 0) || null;
   }
 
   get size() {
@@ -18,18 +18,18 @@ class PriorityQueue {
     return this.size === 0;
   }
 
-  enqueue(item, priority) {
+  enqueue(item, priority = 0) {
     priority = Math.max(Number(priority), 0);
     const element = { item, priority };
 
     if (
       this.isEmpty ||
-      element.priority >= this.#list[this.size - 1].priority
+      element.priority <= this.#list[this.size - 1].priority
     ) {
       this.#list.push(element);
     } else {
       for (let index in this.#list) {
-        if (element.priority < this.#list[index].priority) {
+        if (element.priority > this.#list[index].priority) {
           this.#list.splice(index, 0, element);
           break;
         }
@@ -40,11 +40,10 @@ class PriorityQueue {
   }
 
   dequeue() {
-    const element = this.#list.shift();
-    return element ? element.item : null;
+    return this.isEmpty ? null : this.#list.shift().item;
   }
 
-  print() {
-    console.log(this.#list.map((el) => el.item));
+  toString() {
+    return this.#list.map((el) => el.item).toString();
   }
 }

@@ -1,9 +1,9 @@
 class Stack {
   #list = [];
-  #maxSize;
+  #capacity = null;
 
-  constructor(maxSize) {
-    this.#maxSize = Number(maxSize) || null;
+  constructor(capacity = null) {
+    this.#capacity = Math.max(Number(capacity), 0) || null;
   }
 
   get size() {
@@ -15,26 +15,26 @@ class Stack {
   }
 
   get isFull() {
-    return this.#maxSize !== null && this.size === this.#maxSize;
+    return this.#capacity ? this.size === this.#capacity : false;
   }
 
   push(item) {
-    if (this.#maxSize === null || this.size < this.#maxSize) {
+    if (!this.isFull) {
       this.#list.push(item);
     }
-
+    
     return this.size;
   }
-
+ 
   pop() {
-    return this.pop();
+    return this.#list.pop();
   }
 
   peek() {
     return this.#list[this.size - 1];
   }
 
-  print() {
-    console.log(this.#list);
+  toString() {
+    return this.#list.toString();
   }
 }

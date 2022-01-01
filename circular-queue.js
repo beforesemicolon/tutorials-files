@@ -5,9 +5,9 @@ class CircularQueue {
   #head = -1;
   #size = 0;
 
-  constructor(capacity) {
+  constructor(capacity = 10) {
     this.#capacity = Math.max(Number(capacity), 0) || 10;
-    this.#list = Array(this.#capacity).fill(null);
+    this.#list = Array.from({length: this.#capacity});
   }
 
   get size() {
@@ -40,7 +40,7 @@ class CircularQueue {
     let item = null;
     if (!this.isEmpty) {
       item = this.#list[this.#head];
-      this.#list[this.#head] = null;
+      delete this.#list[this.#head];
       this.#head = (this.#head + 1) % this.#capacity;
       this.#size -= 1;
 
@@ -56,7 +56,7 @@ class CircularQueue {
     return this.#list[this.#head];
   }
 
-  print() {
-    console.log(this.#list.filter((el) => el !== null));
+  toString() {
+    return this.#list.filter((el) => el !== undefined).toString();
   }
 }
