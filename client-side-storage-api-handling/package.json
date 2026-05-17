@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "typescript": "^4.5.4",
-    "vite": "^2.8.0"
+    "vite": "^6.4.2"
   },
   "dependencies": {
     "client-web-storage": "^1.4.5",
