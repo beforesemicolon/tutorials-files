@@ -112,7 +112,7 @@ const DIRECTORY_TYPE = {
 }
 
 class Directory extends Item {
-  #type: DIRECTORY_TYPE.DEFAULT;
+  #type = DIRECTORY_TYPE.DEFAULT;
   #children = new Map();
 
   constructor(name = '', type = DIRECTORY_TYPE.DEFAULT) {
