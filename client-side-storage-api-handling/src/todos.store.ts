@@ -1,7 +1,8 @@
-import {Schema, SchemaValue, ClientStore} from 'client-web-storage';
+import {Schema, SchemaValue, ClientStore, SchemaDefaultValues, EventType, StorageType} from 'client-web-storage';
 import {todosService} from "./todos.service";
 
-export interface ToDo extends Schema.DefaultValue {
+export interface ToDo extends Omit<SchemaDefaultValues, '_id'> {
+	id: string;
 	name: string;
 	description: string;
 	completed: boolean;
@@ -16,25 +17,25 @@ const todoSchema = new Schema<ToDo>("todo", {
 export const todoStore = new ClientStore<ToDo>("todos", todoSchema, {
 	appName: "Todo App",
 	description: "manage todo items",
-	type: ClientStore.Type.MEMORY_STORAGE,
-	version: "1.0"
+	type: StorageType.MEMORYSTORAGE,
+	version: 1,
+	idKeyName: "id"
 });
 
 todoStore.subscribe(async (eventType) => {
-	if (ClientStore.EventType.READY === eventType) {
+	if (EventType.READY === eventType) {
 		await todoStore.loadItems(await todosService.getTodos())
 	}
 })
 
-todoStore.beforeChange(async (eventType, data) => {
+todoStore.beforeChange(async (eventType, {data, id}) => {
 	switch (eventType) {
-		case ClientStore.EventType.CREATED:
+		case EventType.CREATED:
 			await todosService.createTodo(data);
 			break;
-		case ClientStore.EventType.DELETED:
-			await todosService.deleteTodo(data);
+		case EventType.REMOVED:
+			if (id) await todosService.deleteTodo(id);
 			break;
 	}
 	
-	return true;
 })

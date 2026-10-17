@@ -17,7 +17,7 @@ export class ApiService {
 	}
 	
 	post(endpoint: string, data: {} = {}, options: {[k: string]: any} = {}) {
-		fetch(`${this.#base}${endpoint}`, {
+		return fetch(`${this.#base}${endpoint}`, {
 			...options,
 			method: 'POST',
 			headers: {

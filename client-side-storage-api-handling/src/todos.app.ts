@@ -1,15 +1,15 @@
 import {ToDo, todoStore} from "./todos.store";
 import {ContextProviderComponent} from 'cwco';
-import {ClientStore} from "client-web-storage";
+import {EventType} from "client-web-storage";
 
 class TodosApp extends ContextProviderComponent {
 	todos: ToDo[] = [];
 	
 	onMount() {
 		return todoStore.subscribe(async (eventType, details: any) => {
-			if (eventType === ClientStore.EventType.ERROR) {
+			if (eventType === EventType.ERROR) {
 				alert(details.error.message);
-			} else if (eventType === ClientStore.EventType.ABORTED) {
+			} else if (eventType === EventType.ABORTED) {
 				alert(`Could not ${eventType} with ${JSON.stringify(details)}`);
 			} else {
 				this.todos = await todoStore.getItems();
